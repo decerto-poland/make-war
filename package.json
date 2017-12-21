@@ -1,0 +1,32 @@
+{
+  "name": "@decerto/make-war",
+  "version": "0.1.0",
+  "description": "CLI tool to make WAR with static content",
+  "bin": {
+    "make-war": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/decerto-poland/make-war.git"
+  },
+  "keywords": [
+    "war",
+    "bundle",
+    "build",
+    "cli"
+  ],
+  "author": "Decerto Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/decerto-poland/make-war/issues"
+  },
+  "homepage": "https://github.com/decerto-poland/make-war#readme",
+  "dependencies": {
+    "archiver": "^2.1.0",
+    "download": "^6.2.5",
+    "node-getopt": "^0.2.3"
+  }
+}
