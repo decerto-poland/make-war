@@ -4,6 +4,7 @@ const util = require('util');
 const glob = util.promisify(require('glob'));
 const download = require('download');
 const readFile = util.promisify(fs.readFile);
+const access = util.promisify(fs.access);
 
 const {
     urlrewriteXmlContent,
@@ -33,8 +34,14 @@ function urlrewriteXml(archive, srcDir, passThrough) {
         .then(directFilesRegex => archive.append(urlrewriteXmlContent(directFilesRegex, passThrough), {name: 'WEB-INF/urlrewrite.xml'}));
 }
 
+function receiveUrlrewritefilterJar(urlrewritefilterJarUrl) {
+    return access(urlrewritefilterJarUrl)
+        .then(() => readFile(urlrewritefilterJarUrl))
+        .catch(() => download(urlrewritefilterJarUrl));
+}
+
 function urlrewritefilterJar(archive, urlrewritefilterJarUrl) {
-    return download(urlrewritefilterJarUrl)
+    return receiveUrlrewritefilterJar(urlrewritefilterJarUrl)
         .then(buffer => archive.append(buffer, {name: 'WEB-INF/lib/urlrewritefilter.jar'}));
 }
 
