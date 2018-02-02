@@ -67,11 +67,12 @@ function newWar(outputFile) {
 }
 
 function makeWar(opts = {}) {
-    const outputFile = opts['output'];
     const srcDir = opts['input-dir'];
     const description = opts['description'];
     const displayName = opts['name'];
+    const version = opts['version'];
     const passThrough = opts['pass-through'];
+    const outputFile = opts['output'] || `${displayName}-${version}.war`;
     const urlrewritefilterJarUrl = opts['urlrewritefilter-jar-url'];
 
     const archive = newWar(outputFile);
