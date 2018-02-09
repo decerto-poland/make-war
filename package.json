@@ -3,9 +3,10 @@
   "version": "0.3.0",
   "description": "CLI tool to make WAR with static content",
   "bin": {
-    "make-war": "index.js"
+    "make-war": "lib/index.js"
   },
   "scripts": {
+    "build": "babel src -d lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,5 +29,10 @@
     "archiver": "^2.1.1",
     "download": "^6.2.5",
     "node-getopt": "^0.2.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-3": "^6.24.1"
   }
 }
