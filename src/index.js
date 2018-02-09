@@ -3,6 +3,7 @@
 const makeWar = require('./make-war');
 const fs = require('fs');
 const util = require('util');
+require('util.promisify').shim();
 const readFile = util.promisify(fs.readFile);
 
 
