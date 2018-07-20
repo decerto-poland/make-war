@@ -1,6 +1,6 @@
 {
   "name": "@decerto/make-war",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "CLI tool to make WAR with static content",
   "bin": {
     "make-war": "lib/index.js"

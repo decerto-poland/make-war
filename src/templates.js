@@ -3,7 +3,12 @@ module.exports = {
     webXmlContent,
 };
 
-function urlrewriteXmlContent(directFilesRegex, passThrough) {
+const cacheRule = `       
+        <set type="response-header" name="Cache-Control">no-cache</set>
+        <set type="response-header" name="Pragma">no-cache</set>
+        <set type="response-header" name="Expires">Sat, 01 Jan 2000 00:00:00 GMT</set>`;
+
+function urlrewriteXmlContent(directFilesRegex, passThrough, preventCacheForIndexHtml) {
     return Buffer.from(`<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE urlrewrite
         PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
@@ -11,6 +16,7 @@ function urlrewriteXmlContent(directFilesRegex, passThrough) {
 <urlrewrite>
     <rule>
         <from>^/index.html$</from>
+        ${preventCacheForIndexHtml? cacheRule : ''}
         <to last="true">-</to>
     </rule>
     ${ passThrough.map(regex => `
