@@ -1,6 +1,7 @@
 const archiver = require('archiver');
 const fs = require('fs');
 const util = require('util');
+require('util.promisify').shim();
 const glob = util.promisify(require('glob'));
 const download = require('download');
 const readFile = util.promisify(fs.readFile);

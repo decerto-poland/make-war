@@ -1,6 +1,6 @@
 {
   "name": "@decerto/make-war",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "CLI tool to make WAR with static content",
   "bin": {
     "make-war": "lib/index.js"
@@ -29,7 +29,8 @@
   "dependencies": {
     "archiver": "^2.1.1",
     "download": "^6.2.5",
-    "node-getopt": "^0.2.3"
+    "node-getopt": "^0.2.3",
+    "util.promisify": "^1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
