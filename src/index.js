@@ -24,6 +24,7 @@ const opts = require('node-getopt').create([
     ['n', 'name=ARG', `application display name (default is ${defaultOpts.name})`],
     ['v', 'version=ARG', `application version (default is ${defaultOpts.version})`],
     ['p', 'pass-through=ARG+', 'regexp to pass through'],
+    ['', 'prevent-cache-for-index-html', 'add response headers that disable cache for index.html '],
     ['U', 'urlrewritefilter-jar-url=ARG', `specify custom location for urlrewritefilter jar (default is ${defaultOpts['urlrewritefilter-jar-url']})`],
     ['h', 'help', 'display this help'],
 ])

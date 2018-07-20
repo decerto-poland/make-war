@@ -23,7 +23,7 @@ function webXml(archive, displayName, description) {
         .then(() => archive.append(webXmlContent(displayName, description), {name: 'WEB-INF/web.xml'}));
 }
 
-function urlrewriteXml(archive, srcDir, passThrough) {
+function urlrewriteXml(archive, srcDir, passThrough, preventCacheForIndexHtml) {
     return glob(`${srcDir}/**`, {
         nosort: true,
         nodir: true,
@@ -32,7 +32,8 @@ function urlrewriteXml(archive, srcDir, passThrough) {
         .then(files => files
             .map(file => file.replace(`${srcDir}/`, ''))
             .join('|'))
-        .then(directFilesRegex => archive.append(urlrewriteXmlContent(directFilesRegex, passThrough), {name: 'WEB-INF/urlrewrite.xml'}));
+        .then(directFilesRegex => urlrewriteXmlContent(directFilesRegex, passThrough, preventCacheForIndexHtml))
+        .then(content => archive.append(content, {name: 'WEB-INF/urlrewrite.xml'}));
 }
 
 function receiveUrlrewritefilterJar(urlrewritefilterJarUrl) {
@@ -74,6 +75,7 @@ function makeWar(opts = {}) {
     const version = opts['version'];
     const passThrough = opts['pass-through'];
     const outputFile = opts['output'] || `${displayName}-${version}.war`;
+    const preventCacheForIndexHtml = opts['prevent-cache-for-index-html'];
     const urlrewritefilterJarUrl = opts['urlrewritefilter-jar-url'];
 
     const archive = newWar(outputFile);
@@ -81,7 +83,7 @@ function makeWar(opts = {}) {
     return Promise.all([
         source(archive, srcDir),
         urlrewritefilterJar(archive, urlrewritefilterJarUrl),
-        urlrewriteXml(archive, srcDir, passThrough),
+        urlrewriteXml(archive, srcDir, passThrough, preventCacheForIndexHtml),
         webXml(archive, displayName, description)
     ])
         .then(() => archive.finalize())

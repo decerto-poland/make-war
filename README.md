@@ -27,6 +27,7 @@ Usage: make-war
   -n, --name=ARG                      application display name (default is SPA)
   -v, --version=ARG                   application version (default is 0.0.0-SNAPSHOT)
   -p, --pass-through=ARG+             regexp to pass through
+      --prevent-cache-for-index-html  add response headers that disable cache for index.html
   -U, --urlrewritefilter-jar-url=ARG  specify custom location for urlrewritefilter jar (default is http://central.maven.org/maven2/org/tuckey/urlrewritefilter/4.0.3/urlrewritefilter-4.0.3.jar)
   -h, --help                          display this help
 ```
