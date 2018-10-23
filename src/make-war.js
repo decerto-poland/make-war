@@ -49,7 +49,6 @@ function source(archive, srcDir) {
                     const hash = crypto.createHash('sha256');
                     const name = file.replace(`${srcDir}/`, '');
                     archive.append(buffer, {name});
-                    console.log(name);
                     return {name, hash: hash.update(buffer).digest('hex')};
                 }))));
 }
