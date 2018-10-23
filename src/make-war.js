@@ -6,6 +6,7 @@ const glob = util.promisify(require('glob'));
 const download = require('download');
 const readFile = util.promisify(fs.readFile);
 const access = util.promisify(fs.access);
+const crypto = require('crypto');
 
 const {
     urlrewriteXmlContent,
@@ -23,16 +24,9 @@ function webXml(archive, displayName, description) {
         .then(() => archive.append(webXmlContent(displayName, description), {name: 'WEB-INF/web.xml'}));
 }
 
-function urlrewriteXml(archive, srcDir, passThrough, preventCacheForIndexHtml) {
-    return glob(`${srcDir}/**`, {
-        nosort: true,
-        nodir: true,
-        ignore: `${srcDir}/index.html`
-    })
-        .then(files => files
-            .map(file => file.replace(`${srcDir}/`, ''))
-            .join('|'))
-        .then(directFilesRegex => urlrewriteXmlContent(directFilesRegex, passThrough, preventCacheForIndexHtml))
+function urlrewriteXml(archive, files, passThrough, preventCacheForIndexHtml) {
+    return Promise.resolve()
+        .then(() => urlrewriteXmlContent(files, passThrough, preventCacheForIndexHtml))
         .then(content => archive.append(content, {name: 'WEB-INF/urlrewrite.xml'}));
 }
 
@@ -52,8 +46,11 @@ function source(archive, srcDir) {
         .then(files => Promise.all(files
             .map(file => readFile(file)
                 .then(buffer => {
+                    const hash = crypto.createHash('sha256');
                     const name = file.replace(`${srcDir}/`, '');
-                    archive.append(buffer, {name})
+                    archive.append(buffer, {name});
+                    console.log(name);
+                    return {name, hash: hash.update(buffer).digest('hex')};
                 }))));
 }
 
@@ -80,13 +77,13 @@ function makeWar(opts = {}) {
 
     const archive = newWar(outputFile);
 
-    return Promise.all([
-        source(archive, srcDir),
-        urlrewritefilterJar(archive, urlrewritefilterJarUrl),
-        urlrewriteXml(archive, srcDir, passThrough, preventCacheForIndexHtml),
-        webXml(archive, displayName, description)
-    ])
-        .then(() => archive.finalize())
+    return source(archive, srcDir)
+        .then(files => Promise.all([
+            urlrewritefilterJar(archive, urlrewritefilterJarUrl),
+            urlrewriteXml(archive, files, passThrough, preventCacheForIndexHtml),
+            webXml(archive, displayName, description)
+        ]))
+        .then(() => archive.finalize());
 
 }
 

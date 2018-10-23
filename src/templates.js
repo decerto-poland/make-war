@@ -4,31 +4,29 @@ module.exports = {
 };
 
 const cacheRule = `       
-        <set type="response-header" name="Cache-Control">no-cache</set>
-        <set type="response-header" name="Pragma">no-cache</set>
-        <set type="response-header" name="Expires">Sat, 01 Jan 2000 00:00:00 GMT</set>`;
+            <set type="response-header" name="Cache-Control">no-cache</set>
+            <set type="response-header" name="Pragma">no-cache</set>
+            <set type="response-header" name="Expires">Sat, 01 Jan 2000 00:00:00 GMT</set>`;
 
-function urlrewriteXmlContent(directFilesRegex, passThrough, preventCacheForIndexHtml) {
+function urlrewriteXmlContent(files, passThrough, preventCacheForIndexHtml) {
     return Buffer.from(`<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE urlrewrite
         PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
         "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
 <urlrewrite>
-    <rule>
-        <from>^/index.html$</from>
-        ${preventCacheForIndexHtml? cacheRule : ''}
-        <to last="true">-</to>
-    </rule>
+    ${files.map(file => `
+        <rule>${file.name === 'index.html' && preventCacheForIndexHtml? cacheRule : ''}
+            <from>^/${file.name}$</from>
+            <to last="true">-</to>
+            <set type="response-header" name="ETag">"${ file.hash }"</set>
+        </rule>
+    `).join('')}
     ${ passThrough.map(regex => `
         <rule>
             <from>${regex}</from>
             <to last="true">-</to>
         </rule>
     `).join('')}
-    <rule>
-        <from>^/(${directFilesRegex})$</from>
-        <to last="true">-</to>
-    </rule>
     <rule>
         <from>^/(.*)$</from>
         <to>/index.html</to>
