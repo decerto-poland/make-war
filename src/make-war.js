@@ -84,7 +84,6 @@ function makeWar(opts = {}) {
             webXml(archive, displayName, description)
         ]))
         .then(() => archive.finalize());
-
 }
 
 module.exports = makeWar;
