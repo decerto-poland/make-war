@@ -24,9 +24,9 @@ function webXml(archive, displayName, description) {
         .then(() => archive.append(webXmlContent(displayName, description), {name: 'WEB-INF/web.xml'}));
 }
 
-function urlrewriteXml(archive, files, passThrough, preventCacheForIndexHtml) {
+function urlrewriteXml(archive, files, passThrough, indexHtmlOptions) {
     return Promise.resolve()
-        .then(() => urlrewriteXmlContent(files, passThrough, preventCacheForIndexHtml))
+        .then(() => urlrewriteXmlContent(files, passThrough, indexHtmlOptions))
         .then(content => archive.append(content, {name: 'WEB-INF/urlrewrite.xml'}));
 }
 
@@ -71,15 +71,18 @@ function makeWar(opts = {}) {
     const version = opts['version'];
     const passThrough = opts['pass-through'];
     const outputFile = opts['output'] || `${displayName}-${version}.war`;
+    const contentSecurityPolicy = opts['content-security-policy'];
+    const contentSecurityPolicyReportOnly = opts['content-security-policy-report-only'];
     const preventCacheForIndexHtml = opts['prevent-cache-for-index-html'];
     const urlrewritefilterJarUrl = opts['urlrewritefilter-jar-url'];
 
     const archive = newWar(outputFile);
+    const indexHtmlOptions = {preventCacheForIndexHtml, contentSecurityPolicy, contentSecurityPolicyReportOnly};
 
     return source(archive, srcDir)
         .then(files => Promise.all([
             urlrewritefilterJar(archive, urlrewritefilterJarUrl),
-            urlrewriteXml(archive, files, passThrough, preventCacheForIndexHtml),
+            urlrewriteXml(archive, files, passThrough, indexHtmlOptions),
             webXml(archive, displayName, description)
         ]))
         .then(() => archive.finalize());
