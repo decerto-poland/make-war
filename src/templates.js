@@ -3,19 +3,29 @@ module.exports = {
     webXmlContent,
 };
 
-const cacheRule = `       
-            <set type="response-header" name="Cache-Control">no-cache</set>
-            <set type="response-header" name="Pragma">no-cache</set>
-            <set type="response-header" name="Expires">Sat, 01 Jan 2000 00:00:00 GMT</set>`;
+function header(name, value) {
+    return `
+            <set type="response-header" name="${ name }">${ value }</set>`
+}
 
-function urlrewriteXmlContent(files, passThrough, preventCacheForIndexHtml) {
+function indexHtmlHeaders({preventCacheForIndexHtml, contentSecurityPolicy, contentSecurityPolicyReportOnly}) {
+    return [
+        preventCacheForIndexHtml && header('Cache-Control', 'no-cache'),
+        preventCacheForIndexHtml && header('Pragma', 'no-cache'),
+        preventCacheForIndexHtml && header('Expires', 'Sat, 01 Jan 2000 00:00:00 GMT'),
+        contentSecurityPolicy && header('Content-Security-Policy', contentSecurityPolicy),
+        contentSecurityPolicyReportOnly && header('Content-Security-Policy-Report-Only', contentSecurityPolicyReportOnly),
+    ].filter(Boolean).join('');
+}
+
+function urlrewriteXmlContent(files, passThrough, indexHtmlOptions) {
     return Buffer.from(`<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE urlrewrite
         PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
         "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
 <urlrewrite>
     ${files.map(file => `
-        <rule>${file.name === 'index.html' && preventCacheForIndexHtml? cacheRule : ''}
+        <rule>${ file.name === 'index.html' ? indexHtmlHeaders(indexHtmlOptions) : '' }
             <from>^/${file.name}$</from>
             <to last="true">-</to>
             <set type="response-header" name="ETag">"${ file.hash }"</set>

@@ -20,16 +20,18 @@ npm install --save-dev @decerto/make-war
 $ make-war --help
 Usage: make-war
 
-  -c, --config=ARG                    use defaults value for name, version and description from given json file
-  -o, --output=ARG                    output file (default is {name}-{version}.war)
-  -i, --input-dir=ARG                 root directory from which the files are taken (default is dist)
-  -d, --description=ARG               application description
-  -n, --name=ARG                      application display name (default is SPA)
-  -v, --version=ARG                   application version (default is 0.0.0-SNAPSHOT)
-  -p, --pass-through=ARG+             regexp to pass through
-      --prevent-cache-for-index-html  add response headers that disable cache for index.html
-  -U, --urlrewritefilter-jar-url=ARG  specify custom location for urlrewritefilter jar (default is http://central.maven.org/maven2/org/tuckey/urlrewritefilter/4.0.3/urlrewritefilter-4.0.3.jar)
-  -h, --help                          display this help
+  -c, --config=ARG                               use defaults value for name, version and description from given json file
+  -o, --output=ARG                               output file (default is {name}-{version}.war)
+  -i, --input-dir=ARG                            root directory from which the files are taken (default is dist)
+  -d, --description=ARG                          application description
+  -n, --name=ARG                                 application display name (default is SPA)
+  -v, --version=ARG                              application version (default is 0.0.0-SNAPSHOT)
+  -p, --pass-through=ARG+                        regexp to pass through
+  -s, --content-security-policy=ARG              add Content-Security-Policy for index.html
+  -S, --content-security-policy-report-only=ARG  add Content-Security-Policy-Report-Only for index.html
+      --prevent-cache-for-index-html             add response headers that disable cache for index.html
+  -U, --urlrewritefilter-jar-url=ARG             specify custom location for urlrewritefilter jar (default is http://central.maven.org/maven2/org/tuckey/urlrewritefilter/4.0.3/urlrewritefilter-4.0.3.jar)
+  -h, --help                                     display this help
 ```
 
 ### with package.json
