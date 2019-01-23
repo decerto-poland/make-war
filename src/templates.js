@@ -3,18 +3,22 @@ module.exports = {
     webXmlContent,
 };
 
-function header(name, value) {
+function makeHeader(name, value) {
     return `
             <set type="response-header" name="${ name }">${ value }</set>`
 }
 
-function indexHtmlHeaders({preventCacheForIndexHtml, contentSecurityPolicy, contentSecurityPolicyReportOnly}) {
+function indexHtmlHeaders({header, preventCacheForIndexHtml, contentSecurityPolicy, contentSecurityPolicyReportOnly}) {
     return [
-        preventCacheForIndexHtml && header('Cache-Control', 'no-cache'),
-        preventCacheForIndexHtml && header('Pragma', 'no-cache'),
-        preventCacheForIndexHtml && header('Expires', 'Sat, 01 Jan 2000 00:00:00 GMT'),
-        contentSecurityPolicy && header('Content-Security-Policy', contentSecurityPolicy),
-        contentSecurityPolicyReportOnly && header('Content-Security-Policy-Report-Only', contentSecurityPolicyReportOnly),
+        preventCacheForIndexHtml && makeHeader('Cache-Control', 'no-cache'),
+        preventCacheForIndexHtml && makeHeader('Pragma', 'no-cache'),
+        preventCacheForIndexHtml && makeHeader('Expires', 'Sat, 01 Jan 2000 00:00:00 GMT'),
+        contentSecurityPolicy && makeHeader('Content-Security-Policy', contentSecurityPolicy),
+        contentSecurityPolicyReportOnly && makeHeader('Content-Security-Policy-Report-Only', contentSecurityPolicyReportOnly),
+        ...header
+            .map(str => str.match(/(^[^:]*):(.*)/))
+            .filter(Boolean)
+            .map(([, name, value]) => makeHeader(name, value))
     ].filter(Boolean).join('');
 }
 
