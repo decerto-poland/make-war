@@ -74,10 +74,11 @@ function makeWar(opts = {}) {
     const contentSecurityPolicy = opts['content-security-policy'];
     const contentSecurityPolicyReportOnly = opts['content-security-policy-report-only'];
     const preventCacheForIndexHtml = opts['prevent-cache-for-index-html'];
+    const header = opts['header'];
     const urlrewritefilterJarUrl = opts['urlrewritefilter-jar-url'];
 
     const archive = newWar(outputFile);
-    const indexHtmlOptions = {preventCacheForIndexHtml, contentSecurityPolicy, contentSecurityPolicyReportOnly};
+    const indexHtmlOptions = {header, preventCacheForIndexHtml, contentSecurityPolicy, contentSecurityPolicyReportOnly};
 
     return source(archive, srcDir)
         .then(files => Promise.all([

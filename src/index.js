@@ -13,6 +13,7 @@ const defaultOpts = {
     'name': 'SPA',
     'version': '0.0.0-SNAPSHOT',
     'pass-through': [],
+    'header': [],
     'urlrewritefilter-jar-url': 'http://central.maven.org/maven2/org/tuckey/urlrewritefilter/4.0.3/urlrewritefilter-4.0.3.jar',
 };
 
@@ -27,6 +28,7 @@ const opts = require('node-getopt').create([
     ['s', 'content-security-policy=ARG', 'add Content-Security-Policy for index.html'],
     ['S', 'content-security-policy-report-only=ARG', 'add Content-Security-Policy-Report-Only for index.html'],
     ['', 'prevent-cache-for-index-html', 'add response headers that disable cache for index.html '],
+    ['H', 'header=ARG+', 'add response headers for index.html (-H X-My-Header:Content)'],
     ['U', 'urlrewritefilter-jar-url=ARG', `specify custom location for urlrewritefilter jar (default is ${defaultOpts['urlrewritefilter-jar-url']})`],
     ['h', 'help', 'display this help'],
 ])
